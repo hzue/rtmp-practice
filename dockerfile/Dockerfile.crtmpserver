@@ -1,0 +1,17 @@
+FROM ubuntu:16.04
+
+RUN apt-get update \
+  && apt-get install -y wget cmake libssl-dev build-essential unzip
+
+RUN mkdir /crtmpserver
+
+RUN cd /crtmpserver \
+  && wget https://codeload.github.com/j0sh/crtmpserver/zip/centosinit \
+  && unzip centosinit \
+  && cd crtmpserver-centosinit/builders/cmake \
+  && cmake . \
+  && make
+
+WORKDIR /crtmpserver/crtmpserver-centosinit/builders/cmake/
+
+CMD ./crtmpserver/crtmpserver ./crtmpserver/crtmpserver.lua

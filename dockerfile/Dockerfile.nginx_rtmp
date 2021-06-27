@@ -1,0 +1,17 @@
+FROM ubuntu:16.04
+
+RUN mkdir /nginx
+
+RUN apt-get update && apt-get install -y git build-essential libpcre3-dev wget libssl-dev
+
+RUN cd /nginx \
+  && wget http://nginx.org/download/nginx-1.17.2.tar.gz \
+  && tar zxvf nginx-1.17.2.tar.gz \
+  && git clone https://github.com/arut/nginx-rtmp-module.git \
+  && cd nginx-1.17.2 \
+  && ./configure --add-module=/nginx/nginx-rtmp-module \
+  && make && make install
+
+COPY ./nginx/nginx.conf /usr/local/nginx/conf/nginx.conf
+
+CMD /usr/local/nginx/sbin/nginx -g "daemon off;"
